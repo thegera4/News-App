@@ -13,7 +13,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.news.newsapp.BottomMenuScreen
-import com.news.newsapp.MockData
 import com.news.newsapp.components.BottomMenu
 import com.news.newsapp.models.TopNewsArticle
 import com.news.newsapp.network.NewsManager
@@ -52,7 +51,7 @@ fun Navigation(navController: NavHostController,
             startDestination = BottomMenuScreen.TopNews.route,
             modifier = Modifier.padding(paddingValues = paddingValues)
         ){
-            bottomNavigation(navController = navController, articles)
+            bottomNavigation(navController = navController, articles,newsManager)
             composable("Detail/{index}",
                 arguments = listOf(navArgument("index"){type = NavType.IntType})
             ){
@@ -72,12 +71,20 @@ fun Navigation(navController: NavHostController,
 
 }
 
-fun NavGraphBuilder.bottomNavigation(navController: NavController, articles: List<TopNewsArticle>){
+fun NavGraphBuilder.bottomNavigation(navController: NavController,
+                                     articles: List<TopNewsArticle>,
+                                    newsManager: NewsManager){
     composable(BottomMenuScreen.TopNews.route){
         TopNews(navController = navController, articles)
     }
     composable(BottomMenuScreen.Categories.route){
-        Categories()
+        newsManager.getArticlesByCategory("business")
+        newsManager.onSelectedCategoryChanged("business")
+
+        Categories(newsManager = newsManager, onFetchCategory = {
+            newsManager.onSelectedCategoryChanged(it)
+            newsManager.getArticlesByCategory(it)
+        })
     }
     composable(BottomMenuScreen.Sources.route){
         Sources()

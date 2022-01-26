@@ -1,6 +1,5 @@
 package com.news.newsapp.ui.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +17,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +26,6 @@ import com.news.newsapp.MockData
 import com.news.newsapp.MockData.getTimeAgo
 import com.news.newsapp.R
 import com.news.newsapp.models.TopNewsArticle
-import com.news.newsapp.ui.NewsData
 import com.skydoves.landscapist.coil.CoilImage
 
 @Composable
@@ -79,7 +76,7 @@ fun DetailTopAppBar(onBackPressed: () -> Unit = {}) {
 
 @Composable
 fun InfoWithIcon(icon: ImageVector, info: String){
-    Row() {
+    Row {
         Icon(icon, contentDescription = "Author", modifier = Modifier.padding(end = 8.dp),
         colorResource(id = R.color.purple_500)
         )
