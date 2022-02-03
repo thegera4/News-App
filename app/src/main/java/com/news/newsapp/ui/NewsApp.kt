@@ -44,7 +44,8 @@ fun Navigation(navController: NavHostController,
                paddingValues: PaddingValues
 ){
 
-    val articles = newsManager.newsResponse.value.articles
+    val articles = mutableListOf(TopNewsArticle())
+    articles.addAll(newsManager.newsResponse.value.articles ?: listOf(TopNewsArticle()))
     Log.d("news", "$articles")
     articles?.let {
         NavHost(navController = navController,
@@ -58,6 +59,15 @@ fun Navigation(navController: NavHostController,
                     navBackStackEntry ->
                 val index = navBackStackEntry.arguments?.getInt("index")
                 index?.let {
+                    if (newsManager.query.value.isNotEmpty()){
+                        articles.clear()
+                        articles.addAll(newsManager.searchNewsResponse.value.articles
+                            ?: listOf())
+                    } else {
+                        articles.clear()
+                        articles.addAll(newsManager.newsResponse.value.articles
+                            ?: listOf())
+                    }
                     val article = articles[index]
                     DetailScreen(article, scrollState, navController)
                 }
@@ -75,7 +85,7 @@ fun NavGraphBuilder.bottomNavigation(navController: NavController,
                                      articles: List<TopNewsArticle>,
                                     newsManager: NewsManager){
     composable(BottomMenuScreen.TopNews.route){
-        TopNews(navController = navController, articles)
+        TopNews(navController = navController, articles, newsManager.query, newsManager = newsManager)
     }
     composable(BottomMenuScreen.Categories.route){
         newsManager.getArticlesByCategory("business")
@@ -87,6 +97,6 @@ fun NavGraphBuilder.bottomNavigation(navController: NavController,
         })
     }
     composable(BottomMenuScreen.Sources.route){
-        Sources()
+        Sources(newsManager = newsManager)
     }
 }

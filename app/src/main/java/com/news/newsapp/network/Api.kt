@@ -17,7 +17,7 @@ object Api {
         .add(KotlinJsonAdapterFactory())
         .build()
 
-    val logging = HttpLoggingInterceptor()
+    private val logging = HttpLoggingInterceptor()
 
     private val httpClient = OkHttpClient.Builder().apply {
         addInterceptor (
